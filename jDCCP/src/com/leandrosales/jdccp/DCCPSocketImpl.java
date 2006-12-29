@@ -10,8 +10,12 @@ import java.net.SocketImpl;
 
 public class DCCPSocketImpl extends SocketImpl {
 	
+	private InputStream inputStream;
+	private OutputStream outputStream;
+	
 	public DCCPSocketImpl() {
-		
+		this.inputStream  = new DCCPInputStream();
+		this.outputStream = new DCCPOutputStream();
 	}
 
 	@Override
