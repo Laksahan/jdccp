@@ -2,19 +2,17 @@ package com.leandrosales.jdccp;
 import java.io.IOException;
 import java.net.Socket;
 
-public class DCCPSocket {
+public class DCCPSocket extends Socket {
 
-	private Socket socket;
-	
 	public DCCPSocket() {
-		
+		super();
+		this.createDCCPSocket();
 	}
 	
 	public void createDCCPSocket() {
 		DCCPSocketImplFactory aDCCPSocketImplFactory = new DCCPSocketImplFactory();
-		this.socket = new Socket();
 		try {
-			Socket.setSocketImplFactory(aDCCPSocketImplFactory);
+			this.setSocketImplFactory(aDCCPSocketImplFactory);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
