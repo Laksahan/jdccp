@@ -15,12 +15,12 @@ MAKE    = $(UPATH)make
 CTAGS   = $(UPATH)ctags
 INDENT  = $(UPATH)indent -bl -c41 -i4 -l72 -pcs
 
-NativeDCCPSocketImpl:  NativeDCCPSocketImpl.c
-	$(CC) $(CFLAGS) -o NativeJDCCPSocket.so NativeDCCPSocketImpl.c
+libJDCCPSocket:  JDCCPSocket.c
+	$(CC) $(CFLAGS) -o /opt/sun-jdk-1.5.0.09/jre/lib/i386/client/libJDCCPSocket.so JDCCPSocket.c
 
 debug:  print.c
 	@CFLAGS="$(CFLAGS) -DDEBUG";export CFLAGS;$(MAKE) -e
 
 #"clean" target - remove unwanted object files and executables
 clean:
-	rm -f print libPrint.o tags lint nohup.out a.out core
+	rm -f /opt/sun-jdk-1.5.0.09/jre/lib/i386/client/libJDCCPSocket.so nohup.out a.out core
