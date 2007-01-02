@@ -1,9 +1,12 @@
 package com.leandrosales.jdccp.wrapper;
 
-public class NativeDCCPSocketImpl {
+public class JDCCPSocket {
 
 	static {
-		System.loadLibrary("NativeDCCPSocketImpl");
+		System.loadLibrary("JDCCPSocket");
+		//String AbsolutePath = "/opt/sun-jdk-1.5.0.09/jre/lib/i386/client/";
+		//String libName = System.mapLibraryName("JDCCPSocket");
+		//System.load(AbsolutePath+libName);
 	}
 	
 	public native void accept(int socketId, int addr, int addrLen);
@@ -14,7 +17,7 @@ public class NativeDCCPSocketImpl {
 
 	public native void close();
 
-	public native void connect(String host, int port);
+	public native int connect(String host, int port);
 
 	public native void create(boolean stream);
 	
@@ -31,7 +34,7 @@ public class NativeDCCPSocketImpl {
 	public native void setOption(int optID, Object value);
 	
 	public static void main(String[] args) {
-		NativeDCCPSocketImpl dccpSock = new NativeDCCPSocketImpl();
-		dccpSock.connect("", 0);
+		JDCCPSocket dccpSock = new JDCCPSocket();
+		System.out.println(dccpSock.connect("localhost", 5001));
 	}
 }
