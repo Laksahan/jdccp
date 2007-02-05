@@ -13,7 +13,7 @@ public class JDCCPSocket {
 
 	public native int available();
 
-	public native void bind(String host, int port);
+	public native void bind(String host, String port);
 
 	public native void close();
 
@@ -35,6 +35,6 @@ public class JDCCPSocket {
 	
 	public static void main(String[] args) {
 		JDCCPSocket dccpSock = new JDCCPSocket();
-		System.out.println(dccpSock.connect("localhost", 5001));
+		//dccpSock.bind("localhost", 5001);
 	}
 }

@@ -26,8 +26,26 @@ JNIEXPORT jint JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_available
  * Signature: (Ljava/lang/String;I)V
  */
 JNIEXPORT void JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_bind
-  (JNIEnv *env, jobject thisObj, jstring host, jint port) {
-  	
+  (JNIEnv *env, jobject thisObj, jstring host, jstring port) {
+
+  	socketId = (jint)socket(AF_INET, SOCK_DCCP, IPPROTO_DCCP);
+  	const char *hostconn = (*env)->GetStringUTFChars(env, host, 0);
+  	const char *portconn = (*env)->GetStringUTFChars(env, port, 0);
+
+	if (getaddrinfo("localhost", "5001", NULL, &hostinfo)) {
+		printerrno("getaddrinfo");
+    }
+
+    (*env)->ReleaseStringUTFChars(env, host, hostconn);
+    (*env)->ReleaseStringUTFChars(env, port, portconn);
+    
+    socket_options(socketId);
+    if (errno) {
+    	printerrno("set option");
+    }
+    
+    alreadyBind = 1;
+	Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_connect(env, thisObj, host, port);
 }
 
 /*
@@ -37,7 +55,7 @@ JNIEXPORT void JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_bind
  */
 JNIEXPORT void JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_close
   (JNIEnv *env, jobject thisObj) {
-  	
+
 }
 
 /*
@@ -46,34 +64,18 @@ JNIEXPORT void JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_close
  * Signature: (Ljava/lang/String;I)V
  */
 JNIEXPORT jint JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_connect
-  (JNIEnv *env, jobject thisObj, jstring host, jint port) {
-  	struct addrinfo *hostinfo;
+  (JNIEnv *env, jobject thisObj, jstring host, jstring port) {
 
-  	int socketId = (jint)socket(AF_INET, SOCK_DCCP, IPPROTO_DCCP);
-  	const char *hostconn = (*env)->GetStringUTFChars(env, host, 0);
-    //TODO use port parameter instand hardcode here
-	if (getaddrinfo(hostconn, "5001", NULL, &hostinfo)) {
-		//printerrno("getaddrinfo");
-		return (jint)1;
-    }
-    (*env)->ReleaseStringUTFChars(env, host, hostconn);
-    
-    socket_options(socketId);
-	if (errno) {
-		//printerrno("socket_options");
-		printf("teste");
-		return 1;
+	if (alreadyBind == 0) {
+		Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_connect(env, thisObj, host, port);
 	}
-    
-    connect(socketId, hostinfo->ai_addr, hostinfo->ai_addrlen);
+	//return connect(socketId, hostinfo->ai_addr, hostinfo->ai_addrlen);
+	connect(socketId, hostinfo->ai_addr, hostinfo->ai_addrlen);
 	if (errno) {
-		//printerrno("connect");
-		printf("teste1");
-		return 1;
+		printerrno("connect");
 	}
-	
-	writen(socketId, "testando jdccp", strlen("testando jdccp"));
-    
+    //just for test propose!
+    writen(socketId, "testando jdccp", strlen("testando jdccp"));
 }
 
 /*
@@ -155,6 +157,10 @@ void socket_options(int conn_sock) {
 		setsockopt(conn_sock, SOL_DCCP, DCCP_SOCKOPT_SERVICE, (char*)&pkt_size, sizeof(pkt_size));
 
         //signal(SIGPIPE, sigpipe);
+}
+
+void printerrno(char *msg) {
+        printf("%s %d %s\n",msg,errno,strerror(errno));
 }
 
 /*void do_transmit(FILE *fp, int sockfd) {

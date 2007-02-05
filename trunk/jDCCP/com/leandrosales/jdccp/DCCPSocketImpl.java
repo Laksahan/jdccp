@@ -7,21 +7,26 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketImpl;
 
+import com.leandrosales.jdccp.wrapper.JDCCPSocket;
+
 
 public class DCCPSocketImpl extends SocketImpl {
 	
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	
+	private JDCCPSocket dccpSocket;
+	
 	public DCCPSocketImpl() {
 		this.inputStream  = new DCCPInputStream();
 		this.outputStream = new DCCPOutputStream();
+		this.dccpSocket = new JDCCPSocket();
 	}
 
 	@Override
 	protected void accept(SocketImpl s) throws IOException {
 		// TODO Auto-generated method stub
-		
+		System.out.println("accept");
 	}
 
 	@Override
@@ -32,26 +37,24 @@ public class DCCPSocketImpl extends SocketImpl {
 
 	@Override
 	protected void bind(InetAddress host, int port) throws IOException {
-		// TODO Auto-generated method stub
-		
+		this.dccpSocket.bind(host.getHostAddress(), Integer.toString(port));
 	}
 
 	@Override
 	protected void close() throws IOException {
 		// TODO Auto-generated method stub
-		
+		System.out.println("close");
 	}
 
 	@Override
 	protected void connect(String host, int port) throws IOException {
-		// TODO Auto-generated method stub
-		
+		this.dccpSocket.connect(host, port);
 	}
 
 	@Override
 	protected void connect(InetAddress address, int port) throws IOException {
 		// TODO Auto-generated method stub
-		
+		System.out.println("teste connect inetaddress");
 	}
 
 	@Override
