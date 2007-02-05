@@ -27,6 +27,10 @@ extern "C" {
 #define DCCP_SOCKOPT_SERVICE 2
 #define IPPROTO_DCCP 33
 
+int alreadyBind = 0;
+int socketId = -1;
+struct addrinfo *hostinfo;
+
 /*
  * Class:     com_leandrosales_jdccp_wrapper_JDCCPSocket
  * Method:    accept
@@ -49,7 +53,7 @@ JNIEXPORT jint JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_available
  * Signature: (Ljava/lang/String;I)V
  */
 JNIEXPORT void JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_bind
-  (JNIEnv *, jobject, jstring, jint);
+  (JNIEnv *, jobject, jstring, jstring);
 
 /*
  * Class:     com_leandrosales_jdccp_wrapper_JDCCPSocket
@@ -65,7 +69,7 @@ JNIEXPORT void JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_close
  * Signature: (Ljava/lang/String;I)V
  */
 JNIEXPORT jint JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_connect
-  (JNIEnv *, jobject, jstring, jint);
+  (JNIEnv *, jobject, jstring, jstring);
 
 /*
  * Class:     com_leandrosales_jdccp_wrapper_JDCCPSocket
@@ -125,6 +129,8 @@ JNIEXPORT void JNICALL Java_com_leandrosales_jdccp_wrapper_JDCCPSocket_setOption
 
 //---------------------------------
 void socket_options(int);
+void printerrno(char *);
+
 ssize_t writen(int fd, const void *vptr, size_t n);
 
 #ifdef __cplusplus
